@@ -240,6 +240,12 @@ header h1 {
     background: linear-gradient(135deg, #FF8B94 0%, #FF6B9D 100%);
 }
 
+.disk-6 {
+    width: 260px;
+    height: 35px;
+    background: linear-gradient(135deg, #FFD93D 0%, #FFA500 100%);
+}
+
 .rules {
     background: #f0f4ff;
     padding: 20px;
@@ -460,4 +466,5 @@ header h1 {
     .disk-3 { width: 105px; }
     .disk-4 { width: 135px; }
     .disk-5 { width: 165px; }
+    .disk-6 { width: 195px; }
 }

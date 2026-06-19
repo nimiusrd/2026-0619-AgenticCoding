@@ -124,7 +124,7 @@ header h1 {
     background: linear-gradient(180deg, #f5f7fa 0%, #c3cfe2 100%);
     border-radius: 15px;
     padding: 20px;
-    margin-bottom: 30px;
+    margin-bottom: 0;
     gap: 20px;
 }
 
@@ -244,6 +244,7 @@ header h1 {
     background: #f0f4ff;
     padding: 20px;
     border-radius: 15px;
+    margin-top: 20px;
     margin-bottom: 20px;
     border-left: 5px solid #667eea;
 }
@@ -380,7 +381,7 @@ header h1 {
     min-height: 40px;
     padding: 20px;
     border-radius: 10px;
-    margin-top: 20px;
+    margin: 0 0 20px 0;
 }
 
 .message.success {

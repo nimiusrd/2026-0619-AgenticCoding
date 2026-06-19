@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ハノイの塔 - 楽しいパズルゲーム</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🗼 ハノイの塔</h1>
+            <p class="subtitle">すべてのリングを右の棒に移動させよう！</p>
+        </header>
+
+        <div class="game-info">
+            <div class="info-box">
+                <div class="info-label">移動回数</div>
+                <div class="info-value" id="moveCount">0</div>
+            </div>
+            <div class="info-box">
+                <div class="info-label">最小回数</div>
+                <div class="info-value" id="minMoves">-</div>
+            </div>
+            <div class="info-box">
+                <div class="info-label">難易度</div>
+                <select id="difficultySelect" class="difficulty-select">
+                    <option value="3">かんたん (3個)</option>
+                    <option value="4">ふつう (4個)</option>
+                    <option value="5">むずかしい (5個)</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="game-board">
+            <div class="rod-container">
+                <div class="rod" id="rod0"></div>
+                <div class="rod-label">左</div>
+            </div>
+            <div class="rod-container">
+                <div class="rod" id="rod1"></div>
+                <div class="rod-label">中</div>
+            </div>
+            <div class="rod-container">
+                <div class="rod" id="rod2"></div>
+                <div class="rod-label">右</div>
+            </div>
+        </div>
+
+        <div class="rules">
+            <h2>📋 ルール</h2>
+            <ul>
+                <li>✋ リングをクリックして選ぶ</li>
+                <li>🎯 移動先の棒をクリックして置く</li>
+                <li>⚠️ 大きなリングの上に小さなリングは置けない！</li>
+                <li>🎉 すべてのリングを右の棒に移動させたらクリア！</li>
+            </ul>
+        </div>
+
+        <div class="button-group">
+            <button id="resetBtn" class="btn btn-primary">🔄 リセット</button>
+            <button id="hintBtn" class="btn btn-secondary">💡 ヒント</button>
+        </div>
+
+        <div id="message" class="message"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -390,13 +390,24 @@ class HanoiGame {
 class ConfettiEffect {
     constructor(canvas) {
         this.canvas = canvas;
-        this.ctx = canvas.getContext('2d');
+        
+        // キャンバスの確認
+        if (!this.canvas) {
+            console.error('Canvas element not found');
+            return;
+        }
+
+        this.ctx = this.canvas.getContext('2d');
+        if (!this.ctx) {
+            console.error('Cannot get 2D context');
+            return;
+        }
+
         this.particles = [];
         this.animationId = null;
 
         // キャンバスのサイズを設定
-        this.resize();
-        window.addEventListener('resize', () => this.resize());
+        this.updateCanvasSize();
 
         // パーティクルを生成
         this.createParticles();
@@ -405,26 +416,31 @@ class ConfettiEffect {
         this.animate();
     }
 
-    resize() {
+    updateCanvasSize() {
         this.canvas.width = window.innerWidth;
         this.canvas.height = window.innerHeight;
     }
 
     createParticles() {
-        const particleCount = 50;
-        const colors = ['#FF6B6B', '#4ECDC4', '#FFE66D', '#A8E6CF', '#FF8B94', '#667eea', '#764ba2', '#38ef7d'];
+        const particleCount = 60;
+        const colors = ['#FF6B6B', '#4ECDC4', '#FFE66D', '#A8E6CF', '#FF8B94', '#667eea', '#764ba2', '#38ef7d', '#FF69B4', '#00CED1'];
+        const emojis = ['🎉', '✨', '🎊', '⭐', '💫', '🌟'];
 
         for (let i = 0; i < particleCount; i++) {
+            // 半分は四角い紙吹雪、半分は絵文字
+            const useEmoji = Math.random() > 0.5;
+
             this.particles.push({
                 x: Math.random() * this.canvas.width,
-                y: -10,
-                size: Math.random() * 8 + 3,
-                speedY: Math.random() * 3 + 2,
-                speedX: (Math.random() - 0.5) * 2,
+                y: -30,
+                size: Math.random() * 10 + 5,
+                speedY: Math.random() * 4 + 2,
+                speedX: (Math.random() - 0.5) * 4,
                 color: colors[Math.floor(Math.random() * colors.length)],
                 rotation: Math.random() * Math.PI * 2,
-                rotationSpeed: (Math.random() - 0.5) * 0.2,
-                opacity: 1
+                rotationSpeed: (Math.random() - 0.5) * 0.3,
+                opacity: 1,
+                emoji: useEmoji ? emojis[Math.floor(Math.random() * emojis.length)] : null
             });
         }
     }
@@ -433,22 +449,27 @@ class ConfettiEffect {
         // キャンバスをクリア
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
+        let hasParticles = false;
+
         // パーティクルを更新・描画
-        this.particles = this.particles.filter(particle => {
+        for (let i = this.particles.length - 1; i >= 0; i--) {
+            const particle = this.particles[i];
+
             particle.y += particle.speedY;
             particle.x += particle.speedX;
             particle.rotation += particle.rotationSpeed;
-            particle.opacity -= 0.01;
+            particle.opacity -= 0.008;
 
             if (particle.opacity > 0 && particle.y < this.canvas.height) {
                 this.drawParticle(particle);
-                return true;
+                hasParticles = true;
+            } else {
+                this.particles.splice(i, 1);
             }
-            return false;
-        });
+        }
 
         // パーティクルがまだ存在する場合は続ける
-        if (this.particles.length > 0) {
+        if (hasParticles) {
             this.animationId = requestAnimationFrame(() => this.animate());
         }
     }
@@ -456,10 +477,21 @@ class ConfettiEffect {
     drawParticle(particle) {
         this.ctx.save();
         this.ctx.globalAlpha = particle.opacity;
-        this.ctx.fillStyle = particle.color;
         this.ctx.translate(particle.x, particle.y);
         this.ctx.rotate(particle.rotation);
-        this.ctx.fillRect(-particle.size / 2, -particle.size / 2, particle.size, particle.size);
+
+        if (particle.emoji) {
+            // 絵文字を描画
+            this.ctx.font = `${particle.size * 2}px Arial`;
+            this.ctx.textAlign = 'center';
+            this.ctx.textBaseline = 'middle';
+            this.ctx.fillText(particle.emoji, 0, 0);
+        } else {
+            // 四角を描画
+            this.ctx.fillStyle = particle.color;
+            this.ctx.fillRect(-particle.size / 2, -particle.size / 2, particle.size, particle.size);
+        }
+
         this.ctx.restore();
     }
 }

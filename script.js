@@ -72,7 +72,7 @@ class HanoiGame {
             clearInterval(this.gameTimer);
         }
         this.gameStartTime = Date.now();
-        this.clearTimeEl.textContent = '-';
+        this.clearTimeEl.textContent = '0秒';
 
         // ディスクを初期位置に配置
         for (let i = this.numDisks; i >= 1; i--) {
@@ -86,6 +86,21 @@ class HanoiGame {
         // 最小回数を計算して表示
         const minMoves = Math.pow(2, this.numDisks) - 1;
         this.minMovesEl.textContent = minMoves;
+
+        // 毎秒経過時間を更新
+        this.gameTimer = setInterval(() => this.updateElapsedTime(), 1000);
+    }
+
+    updateElapsedTime() {
+        const elapsedTime = Math.floor((Date.now() - this.gameStartTime) / 1000);
+        const minutes = Math.floor(elapsedTime / 60);
+        const seconds = elapsedTime % 60;
+        
+        if (minutes > 0) {
+            this.clearTimeEl.textContent = `${minutes}分${seconds}秒`;
+        } else {
+            this.clearTimeEl.textContent = `${seconds}秒`;
+        }
     }
 
     updateDisplay() {
@@ -264,6 +279,11 @@ class HanoiGame {
     }
 
     showWinMessage() {
+        // タイマーを停止
+        if (this.gameTimer) {
+            clearInterval(this.gameTimer);
+        }
+
         const minMoves = Math.pow(2, this.numDisks) - 1;
         
         // クリアタイムを計算

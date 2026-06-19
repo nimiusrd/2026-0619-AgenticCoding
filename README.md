@@ -39,6 +39,7 @@ npm run test:coverage
 
 ```
 .
+├── .github/workflows/    # GitHub Actions CI/CD設定
 ├── src/
 │   ├── main.tsx       # アプリケーションエントリーポイント
 │   ├── App.tsx        # ルートコンポーネント
@@ -62,6 +63,7 @@ npm run test:coverage
 - **TypeScript 厳密モード**: 型安全性を最大化
 - **Biome**: 高速なリントとフォーマッター
 - **Vitest**: Vitestベースのテストフレームワーク
+- **GitHub Actions**: CI/CD自動化
 
 ## スクリプト
 
@@ -72,6 +74,21 @@ npm run test:coverage
 - `npm run lint:fix` - コードを自動修正
 - `npm run test` - テストを実行
 - `npm run test:coverage` - テストカバレッジを生成
+
+## CI/CD
+
+このプロジェクトはGitHub Actionsで自動検証を実行します。
+
+**トリガー:**
+- `main` / `002` ブランチへの push
+- これらのブランチへの pull request
+
+**実行内容:**
+- TypeScript型チェック
+- Biomeリント
+- Vitestでテスト実行
+- 本番ビルド
+- カバレッジレポートのアップロード
 
 ## ライセンス
 

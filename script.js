@@ -9,9 +9,12 @@ class HanoiGame {
         this.isAutoSolving = false;
         this.autoSolveSpeed = 800;
         this.optimalMoves = [];
+        this.gameStartTime = null;
+        this.gameTimer = null;
 
         this.moveCountEl = document.getElementById('moveCount');
         this.minMovesEl = document.getElementById('minMoves');
+        this.clearTimeEl = document.getElementById('clearTime');
         this.difficultySelect = document.getElementById('difficultySelect');
         this.resetBtn = document.getElementById('resetBtn');
         this.hintBtn = document.getElementById('hintBtn');
@@ -63,6 +66,13 @@ class HanoiGame {
         this.isAutoSolving = false;
         this.autoSolveControl.style.display = 'none';
         this.autoSolveBtn.style.display = 'block';
+
+        // タイマーをリセット
+        if (this.gameTimer) {
+            clearInterval(this.gameTimer);
+        }
+        this.gameStartTime = Date.now();
+        this.clearTimeEl.textContent = '-';
 
         // ディスクを初期位置に配置
         for (let i = this.numDisks; i >= 1; i--) {
@@ -255,7 +265,18 @@ class HanoiGame {
 
     showWinMessage() {
         const minMoves = Math.pow(2, this.numDisks) - 1;
-        let message = `🎉 やった！クリア！\n移動回数: ${this.moveCount}回`;
+        
+        // クリアタイムを計算
+        const elapsedTime = Math.floor((Date.now() - this.gameStartTime) / 1000);
+        const minutes = Math.floor(elapsedTime / 60);
+        const seconds = elapsedTime % 60;
+        const timeString = minutes > 0 ? `${minutes}分${seconds}秒` : `${seconds}秒`;
+        
+        // UI に表示
+        this.clearTimeEl.textContent = timeString;
+        
+        // メッセージ作成
+        let message = `🎉 やった！クリア！\n移動回数: ${this.moveCount}回\n⏱️ クリアタイム: ${timeString}`;
 
         if (this.moveCount === minMoves) {
             message += `\n✨ パーフェクト！最小回数でクリアしました！`;

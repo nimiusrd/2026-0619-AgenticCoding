@@ -87,7 +87,54 @@ class HanoiGame {
                 const diskEl = this.createDiskElement(diskSize, rodIndex, i);
                 rodEl.appendChild(diskEl);
             }
+
+            // 棒のドラッグイベントを設定
+            this.setupRodDragEvents(rodEl, rodIndex);
         }
+    }
+
+    setupRodDragEvents(rodEl, rodIndex) {
+        rodEl.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+            rodEl.classList.add('drag-over');
+        });
+
+        rodEl.addEventListener('dragleave', () => {
+            rodEl.classList.remove('drag-over');
+        });
+
+        rodEl.addEventListener('drop', (e) => {
+            e.preventDefault();
+            rodEl.classList.remove('drag-over');
+            
+            try {
+                const data = JSON.parse(e.dataTransfer.getData('application/json'));
+                const { size, fromRod } = data;
+
+                // 同じ棒へのドロップは無視
+                if (fromRod === rodIndex) {
+                    return;
+                }
+
+                // 棒の最上部のディスクが一致するかチェック
+                if (this.rods[fromRod].length === 0 || this.rods[fromRod][this.rods[fromRod].length - 1] !== size) {
+                    this.showMessage('⚠️ そのリングは動かせません！', 'warning');
+                    return;
+                }
+
+                // 移動可能か確認
+                if (this.canMove(size, rodIndex)) {
+                    this.moveDisk(fromRod, rodIndex);
+                    this.showMessage(`✨ リング ${size} を移動しました！`, 'hint');
+                    this.deselectDisk();
+                } else {
+                    this.showMessage('❌ 大きなリングは小さなリングの上に置けません！', 'warning');
+                }
+            } catch (error) {
+                console.error('Drop error:', error);
+            }
+        });
     }
 
     createDiskElement(size, rodIndex, position) {
@@ -95,8 +142,24 @@ class HanoiGame {
         disk.className = `disk disk-${size}`;
         disk.textContent = size;
         disk.style.bottom = `${position * 45}px`;
+        disk.draggable = true;
 
+        // クリックイベント
         disk.addEventListener('click', () => this.selectDisk(size, rodIndex));
+
+        // ドラッグイベント
+        disk.addEventListener('dragstart', (e) => {
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('application/json', JSON.stringify({
+                size: size,
+                fromRod: rodIndex
+            }));
+            disk.classList.add('dragging');
+        });
+
+        disk.addEventListener('dragend', () => {
+            disk.classList.remove('dragging');
+        });
 
         return disk;
     }

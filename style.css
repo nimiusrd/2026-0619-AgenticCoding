@@ -159,6 +159,20 @@ header h1 {
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
 }
 
+.disk.dragging {
+    opacity: 0.6;
+    cursor: grabbing;
+    transform: translateX(-50%) scale(1.1) rotate(5deg);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+}
+
+.rod.drag-over {
+    background: linear-gradient(180deg, #e0e0ff 0%, #b3c0ff 100%);
+    box-shadow: inset 0 0 20px rgba(102, 126, 234, 0.3), 0 0 15px rgba(102, 126, 234, 0.3);
+    border: 3px solid #667eea;
+}
+
 @keyframes pulse {
     0%, 100% { transform: translateX(-50%) scale(1); }
     50% { transform: translateX(-50%) scale(1.1); }

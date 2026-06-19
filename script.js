@@ -21,6 +21,7 @@ class HanoiGame {
         this.speedLabel = document.getElementById('speedLabel');
         this.autoSolveControl = document.getElementById('autoSolveControl');
         this.messageEl = document.getElementById('message');
+        this.effectCanvas = document.getElementById('effectCanvas');
 
         this.setupEventListeners();
         this.initGame();
@@ -264,6 +265,9 @@ class HanoiGame {
         }
 
         this.showMessage(message, 'success');
+        
+        // エフェクトを表示
+        new ConfettiEffect(this.effectCanvas);
     }
 
     highlightSelectedDisk() {
@@ -379,6 +383,84 @@ class HanoiGame {
         } else {
             this.speedLabel.textContent = '超低速';
         }
+    }
+}
+
+// 紙吹雪エフェクトのクラス
+class ConfettiEffect {
+    constructor(canvas) {
+        this.canvas = canvas;
+        this.ctx = canvas.getContext('2d');
+        this.particles = [];
+        this.animationId = null;
+
+        // キャンバスのサイズを設定
+        this.resize();
+        window.addEventListener('resize', () => this.resize());
+
+        // パーティクルを生成
+        this.createParticles();
+
+        // アニメーション開始
+        this.animate();
+    }
+
+    resize() {
+        this.canvas.width = window.innerWidth;
+        this.canvas.height = window.innerHeight;
+    }
+
+    createParticles() {
+        const particleCount = 50;
+        const colors = ['#FF6B6B', '#4ECDC4', '#FFE66D', '#A8E6CF', '#FF8B94', '#667eea', '#764ba2', '#38ef7d'];
+
+        for (let i = 0; i < particleCount; i++) {
+            this.particles.push({
+                x: Math.random() * this.canvas.width,
+                y: -10,
+                size: Math.random() * 8 + 3,
+                speedY: Math.random() * 3 + 2,
+                speedX: (Math.random() - 0.5) * 2,
+                color: colors[Math.floor(Math.random() * colors.length)],
+                rotation: Math.random() * Math.PI * 2,
+                rotationSpeed: (Math.random() - 0.5) * 0.2,
+                opacity: 1
+            });
+        }
+    }
+
+    animate() {
+        // キャンバスをクリア
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+        // パーティクルを更新・描画
+        this.particles = this.particles.filter(particle => {
+            particle.y += particle.speedY;
+            particle.x += particle.speedX;
+            particle.rotation += particle.rotationSpeed;
+            particle.opacity -= 0.01;
+
+            if (particle.opacity > 0 && particle.y < this.canvas.height) {
+                this.drawParticle(particle);
+                return true;
+            }
+            return false;
+        });
+
+        // パーティクルがまだ存在する場合は続ける
+        if (this.particles.length > 0) {
+            this.animationId = requestAnimationFrame(() => this.animate());
+        }
+    }
+
+    drawParticle(particle) {
+        this.ctx.save();
+        this.ctx.globalAlpha = particle.opacity;
+        this.ctx.fillStyle = particle.color;
+        this.ctx.translate(particle.x, particle.y);
+        this.ctx.rotate(particle.rotation);
+        this.ctx.fillRect(-particle.size / 2, -particle.size / 2, particle.size, particle.size);
+        this.ctx.restore();
     }
 }
 

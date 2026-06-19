@@ -60,6 +60,14 @@
         <div class="button-group">
             <button id="resetBtn" class="btn btn-primary">🔄 リセット</button>
             <button id="hintBtn" class="btn btn-secondary">💡 ヒント</button>
+            <button id="autoSolveBtn" class="btn btn-solve">🤖 最短回答を見る</button>
+        </div>
+
+        <div id="autoSolveControl" class="auto-solve-control" style="display: none;">
+            <label for="speedSlider">スピード:</label>
+            <input type="range" id="speedSlider" min="100" max="2000" value="800" step="100">
+            <span id="speedLabel">中速</span>
+            <button id="stopAutoBtn" class="btn btn-stop">⏹️ 停止</button>
         </div>
 
         <div id="message" class="message"></div>
